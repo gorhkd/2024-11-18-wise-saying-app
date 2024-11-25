@@ -1,104 +1,77 @@
 package org.example;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Scanner;
+// 각각의 모듈 : 컨트롤러, 서비스, 리파지토리
+// 레이어드 아키텍쳐 : 유지보수, 코드를 파악 쉽다.
+// 컨트롤러 (점원):
+// 서비스 (요리사):
+// 리파지토리 (창고):
 
-import static java.awt.SystemColor.info;
+// 도메인 = 영역
+
+//커뮤니티 사이트 (여러 모듈로 되어있는)
+// 글(글 쓰기- 글 수정),  회원(로그인 - 회원가입),  알림
+
+// App : 고객의 명령을 받음 다른 곳으로 보내주는 역할
+//
+
+
 
 //TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
 // click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 public class Main {
-    public static void main(String[] args) {
-        System.out.println("== 명령 앱 ==");
+    public void main(String[] args) {
+        App app = new App();
+        app.run();
 
-        Scanner scanner = new Scanner(System.in);
-        List<Information> quotes = new ArrayList<>();
-        int nextId = 1;
 
-        while (true) {
-            System.out.print("명령) ");
-            String cmd = scanner.nextLine().trim();
-            System.out.println("입력된 명령어 : " + cmd);
+    }
 
-            if (cmd.equals("종료")) {
-                System.out.println("== 명령 앱 종료 ==");
-                break;
-            } else if (cmd.equals("등록")) {
-                System.out.println("명언 : ");
-                String wise_saying = scanner.nextLine().trim();
+    public class App {
+        public void run(){
+            System.out.println("== 명언 앱 ==");
+            Scanner scanner = new Scanner(System.in);
 
-                System.out.println("작가 : ");
-                String author = scanner.nextLine().trim();
 
-                Information info = new Information(nextId, wise_saying, author);
-                quotes.add(info);
-                System.out.println(nextId + "번 명언이 등록되었습니다.");
+            while(true){
+                int lastId = 1;
 
-                nextId++;
-            } else if (cmd.equals("목록")) {
-                if (quotes.isEmpty()) {
-                    System.out.println("등록된 명언이 없습니다.");
-                } else {
-                    for (Information quote : quotes) {
-                        System.out.println(quote);
-                    }
+                System.out.print("명령) ");
+                String cmd = scanner.nextLine().trim();
+
+                if (cmd.equals("종료")){
+                    System.out.println("종료"); break;
+                }
+
+                else if(cmd.equals("등록")){
+                    System.out.println("명언: ");
+                    String content = scanner.nextLine();
+                    System.out.println("작가: ");
+                    String author = scanner.nextLine();
+                    System.out.println(lastId + "번 명언이 등록되었습니다.");
+
+                    WiseSaying wiseSaying = new WiseSaying(lastId, content, author);
+
+                    lastId++;
+                }
+
+                else if(cmd.equals("목록")){
+
                 }
             }
-
-            else if (cmd.equals("삭제")) {
-                System.out.println("삭제 할 번호를 알려주세요.");
-                int delete_id = scanner.nextInt();
-                scanner.nextLine();
-                boolean found = false;
-
-                for(Information q : quotes) {
-                    if(delete_id == q.id){
-                    quotes.removeIf(quote -> quote.id == delete_id);
-                    System.out.println(delete_id + "번 명언이 삭제되었습니다.");
-                    found = true;
-                    break;
-                    }
-                } if (!found) {
-                    System.out.println(delete_id + "번 명언은 존재 하지 않습니다.");
-                }
-            }
-
-
-            else {
-                System.out.println("알 수 없는 명령어입니다.");
-            }
-
         }
     }
 
-
-
-
-
-    public static class Information{
+    class WiseSaying {
         int id;
+        String content;
         String author;
-        String wise_saying;
 
-        Information(int id, String author, String wise_saying){
+        public WiseSaying(int id, String content, String author) {
             this.id = id;
+            this.content = content;
             this.author = author;
-            this.wise_saying = wise_saying;
         }
-
-        @Override
-        public String toString() {
-            return
-                    "번호 : " + id + '\'' +
-                    "작가 : " + author + '\'' +
-                    "명언 : " + wise_saying;
-        }
-
     }
-
-
-
 
 }
